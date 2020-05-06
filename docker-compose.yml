@@ -1,0 +1,42 @@
+version: "3.7"
+services:
+  api:
+    container_name: api
+    build: ./api
+    working_dir: /home/api
+    environment:
+      - API_PORT=3000
+      - NODE_TLS_REJECT_UNAUTHORIZED=0
+    volumes:
+      - ./api:/home/api
+    command: "./node_modules/.bin/nest start --watch"
+    expose:
+      - "3000"
+
+  web:
+    container_name: web
+    build: ./web
+    working_dir: /home/web
+    depends_on:
+      - api
+    environment:
+      - REACT_APP_API_PORT=3000
+      - REACT_APP_API_HOST=localhost
+      - REACT_APP_API_PREFIX=api/v1
+    volumes:
+      - ./web:/home/web
+    expose:
+      - "3001"
+    command: "yarn start"
+
+  nginx:
+    container_name: proxy
+    image: nginx:alpine
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
+    ports:
+      - 80:80
+      # - 443:443
+    links:
+      - api
+      - web
