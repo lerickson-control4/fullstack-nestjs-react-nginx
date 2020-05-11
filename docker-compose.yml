@@ -12,6 +12,7 @@ services:
     command: "./node_modules/.bin/nest start --watch"
     expose:
       - "3000"
+    command: "bash start.sh"
 
   web:
     container_name: web
@@ -27,7 +28,7 @@ services:
       - ./web:/home/web
     expose:
       - "3001"
-    command: "yarn start"
+    command: "bash start.sh"
 
   nginx:
     container_name: proxy
