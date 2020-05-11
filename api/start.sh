@@ -1,2 +1,2 @@
 #!/bin/sh
-yarn && yarn start:debug
+yarn start:debug
